@@ -60,7 +60,7 @@ regression_targets = [
     "sealevelpressure",
 ]
 
-city_columns = city_encoder.get_feature_names_out(["city"])
+# city_columns = city_encoder.get_feature_names_out(["city"])
 
 
 @app.route('/')
@@ -84,6 +84,7 @@ def predict():
         le_desc = joblib.load(os.path.join(MODELS_DIR, "label_encoder_description.pkl"))
         le_icon = joblib.load(os.path.join(MODELS_DIR, "label_encoder_icon.pkl"))
         city_encoder = joblib.load(os.path.join(MODELS_DIR, "stage1_city_encoder.pkl"))
+        # city_columns = city_encoder.get_feature_names_out(["city"])
         data = request.get_json()
         dt = datetime.strptime(data["datetime"], "%Y-%m-%d")
         year = dt.year
