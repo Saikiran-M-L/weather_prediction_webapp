@@ -13,7 +13,7 @@ const app = createApp({
 
        try {
         
-        const response = await fetch('https://weather_prediction_webapp.onrender.com/predict', {
+        const response = await fetch('/predict', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
