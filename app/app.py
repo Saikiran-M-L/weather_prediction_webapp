@@ -16,14 +16,14 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app)
 
 # Load models and encoders
-stage1_model = joblib.load(os.path.join(MODELS_DIR, "stage1_model.pkl"))
-regressor = joblib.load(os.path.join(MODELS_DIR, "regressor.pkl"))
-clf_desc = joblib.load(os.path.join(MODELS_DIR, "description_classifier.pkl"))
-clf_icon = joblib.load(os.path.join(MODELS_DIR, "icon_classifier.pkl"))
-scaler = joblib.load(os.path.join(MODELS_DIR, "scaler.pkl"))
-le_desc = joblib.load(os.path.join(MODELS_DIR, "label_encoder_description.pkl"))
-le_icon = joblib.load(os.path.join(MODELS_DIR, "label_encoder_icon.pkl"))
-city_encoder = joblib.load(os.path.join(MODELS_DIR, "stage1_city_encoder.pkl"))
+# stage1_model = joblib.load(os.path.join(MODELS_DIR, "stage1_model.pkl"))
+# regressor = joblib.load(os.path.join(MODELS_DIR, "regressor.pkl"))
+# clf_desc = joblib.load(os.path.join(MODELS_DIR, "description_classifier.pkl"))
+# clf_icon = joblib.load(os.path.join(MODELS_DIR, "icon_classifier.pkl"))
+# scaler = joblib.load(os.path.join(MODELS_DIR, "scaler.pkl"))
+# le_desc = joblib.load(os.path.join(MODELS_DIR, "label_encoder_description.pkl"))
+# le_icon = joblib.load(os.path.join(MODELS_DIR, "label_encoder_icon.pkl"))
+# city_encoder = joblib.load(os.path.join(MODELS_DIR, "stage1_city_encoder.pkl"))
 
 target_columns = [
     "tempmax",
@@ -76,6 +76,14 @@ def predict():
         _type_: _description_
     """
     try:
+        stage1_model = joblib.load(os.path.join(MODELS_DIR, "stage1_model.pkl"))
+        regressor = joblib.load(os.path.join(MODELS_DIR, "regressor.pkl"))
+        clf_desc = joblib.load(os.path.join(MODELS_DIR, "description_classifier.pkl"))
+        clf_icon = joblib.load(os.path.join(MODELS_DIR, "icon_classifier.pkl"))
+        scaler = joblib.load(os.path.join(MODELS_DIR, "scaler.pkl"))
+        le_desc = joblib.load(os.path.join(MODELS_DIR, "label_encoder_description.pkl"))
+        le_icon = joblib.load(os.path.join(MODELS_DIR, "label_encoder_icon.pkl"))
+        city_encoder = joblib.load(os.path.join(MODELS_DIR, "stage1_city_encoder.pkl"))
         data = request.get_json()
         dt = datetime.strptime(data["datetime"], "%Y-%m-%d")
         year = dt.year
