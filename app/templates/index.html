@@ -1,0 +1,135 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Forecast</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="🌦️" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+
+    <!-- Three.js & Vanta.js Globe -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+</head>
+
+<body>
+    <div id="background"></div>
+
+    <div class="container">
+        <h1 class="glow">🌍 Weather Forecast</h1>
+
+        <div class="form-group">
+            <select v-model="city" id="city" class="animated-select">
+                <option value="" disabled selected>Select City</option>
+                <option value="Berlin">Berlin</option>
+                <option value="Hamburg">Hamburg</option>
+                <option value="Munich">Munich</option>
+                <option value="Cologne">Cologne</option>
+                <option value="Frankfurt">Frankfurt</option>
+            </select>
+
+            <input type="date" v-model="date" id="date" class="animated-input" />
+            <button @click="fetchForecast" id="getForecast">Get Forecast</button>
+        </div>
+
+        <!-- <div class="forecast animated-card" id="forecast"></div> -->
+        <div class="forecast-card">
+            <div class="forecast-header">
+                <h2 id="forecastCity" v-text="city"></h2>
+                <p id="forecastDate" v-text="date"></p>
+            </div>
+
+            <div class="forecast-details" v-if="weather">
+                <div class="icon-desc">
+                    <img :src="getIconPath(weather?.icon)" class="weather-svg-icon" />
+                    <p class="description" v-text="weather?.description"></p>
+                </div>
+
+                <div class="weather-metrics" v-if="weather">
+                    <div class="metric">
+                        <div class="metric-icon">
+                            <img src="{{ url_for('static', filename='icons/thermometer-celsius.svg') }}" alt="Temperature Icon" class="icon" />
+                        </div>
+                        <div class="metric-text">
+                            <div class="label">Temperature</div>
+                            <div class="value" v-text="weather?.temp">°C</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-icon">
+                            <img src="{{ url_for('static', filename='icons/thermometer-celsius.svg') }}" alt="Temperature Icon" class="icon" />
+                        </div>
+                        <div class="metric-text">
+                            <div class="label">Feels Like</div>
+                            <div class="value" v-text="weather?.feelslike">°C</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-icon">
+                            <img src="{{ url_for('static', filename='icons/humidity.svg') }}" alt="Humidity Icon" class="icon" />
+                        </div>
+                        <div class="metric-text">
+                            <div class="label">Humidity</div>
+                            <div class="value" v-text="weather?.humidity">%</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-icon">
+                            <img src="{{ url_for('static', filename='icons/wind.svg') }}" alt="Wind Speed Icon" class="icon" />
+                        </div>
+                        <div class="metric-text">
+                            <div class="label">Wind Speed</div>
+                            <div class="value" v-text="weather?.windspeed">km/h</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-icon">
+                            <img src="{{ url_for('static', filename='icons/haze.svg') }}" alt="Precipitation Icon" class="icon" />
+                        </div>
+                        <div class="metric-text">
+                            <div class="label">Precipitation</div>
+                            <div class="value" v-text="weather?.precip">mm</div>
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-icon">
+                           <img src="{{ url_for('static', filename='icons/barometer.svg') }}" alt="Pressure Icon" class="icon" />  
+                        </div>
+                        <div class="metric-text">
+                            <div class="label">Pressure</div>
+                            <div class="value" v-text="weather?.sealevelpressure">hPa</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Vanta Background Init -->
+    <script>
+        VANTA.GLOBE({
+            el: "#background",
+            mouseControls: true,
+            touchControls: true,
+            minHeight: 200.0,
+            minWidth: 200.0,
+            scale: 1.0,
+            scaleMobile: 1.0,
+            color: 0x00aaff,
+            backgroundColor: 0x0d1b2a
+        });
+    </script>
+    <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+
+</html>

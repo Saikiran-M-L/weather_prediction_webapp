@@ -1,25 +1,29 @@
+"""Flask API"""
+import os
 from datetime import datetime
 
 import joblib
 import numpy as np
 import pandas as pd
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODELS_DIR = os.path.join(BASE_DIR,  "models")
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 
 CORS(app)
 
 # Load models and encoders
-stage1_model = joblib.load("models/stage1_model.pkl")
-regressor = joblib.load("models/regressor.pkl")
-clf_desc = joblib.load("models/description_classifier.pkl")
-clf_icon = joblib.load("models/icon_classifier.pkl")
-scaler = joblib.load("models/scaler.pkl")
-le_desc = joblib.load("models/label_encoder_description.pkl")
-le_icon = joblib.load("models/label_encoder_icon.pkl")
-city_encoder = joblib.load("models/stage1_city_encoder.pkl")
+stage1_model = joblib.load(os.path.join(MODELS_DIR, "stage1_model.pkl"))
+regressor = joblib.load(os.path.join(MODELS_DIR, "regressor.pkl"))
+clf_desc = joblib.load(os.path.join(MODELS_DIR, "description_classifier.pkl"))
+clf_icon = joblib.load(os.path.join(MODELS_DIR, "icon_classifier.pkl"))
+scaler = joblib.load(os.path.join(MODELS_DIR, "scaler.pkl"))
+le_desc = joblib.load(os.path.join(MODELS_DIR, "label_encoder_description.pkl"))
+le_icon = joblib.load(os.path.join(MODELS_DIR, "label_encoder_icon.pkl"))
+city_encoder = joblib.load(os.path.join(MODELS_DIR, "stage1_city_encoder.pkl"))
 
 target_columns = [
     "tempmax",
@@ -59,6 +63,11 @@ regression_targets = [
 city_columns = city_encoder.get_feature_names_out(["city"])
 
 
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
 @app.route("/predict", methods=["POST"])
 def predict():
     """Prediction of weather with the given inputs City and Date
@@ -96,7 +105,8 @@ def predict():
 
         # Stage 2 predict
         city_vector = [
-            1 if f"city_{stage1_predict['name']}" == city else 0 for city in cities
+            1 if f"city_{stage1_predict['name']}" ==
+            city else 0 for city in cities
         ]
 
         X_input = np.array(
@@ -151,7 +161,8 @@ def predict():
         reg_output["feelslike"] = round(reg_output["feelslike"], 2)
         reg_output["humidity"] = round(reg_output["humidity"], 2)
         reg_output["precip"] = round(reg_output["precip"], 2)
-        reg_output["sealevelpressure"] = round(reg_output["sealevelpressure"], 2)
+        reg_output["sealevelpressure"] = round(reg_output["sealevelpressure"],
+                                               2)
         reg_output["temp"] = round(reg_output["temp"], 2)
         reg_output["windspeed"] = round(reg_output["windspeed"], 2)
 
